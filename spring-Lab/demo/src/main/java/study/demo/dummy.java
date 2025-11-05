@@ -4,13 +4,19 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.UuidGenerator;
+
+import java.util.UUID;
 
 @Table(name = "DummyTable")
 @Entity
 public class dummy {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Id
+    @GeneratedValue
+    @UuidGenerator(style = UuidGenerator.Style.TIME)
+    @Column(length = 36, nullable = false, updatable = false)
+    private UUID id;
 
     @Column(length = 100)
     private String name;
@@ -18,20 +24,24 @@ public class dummy {
     @Column(length = 255)
     private String address;
 
+    @Column(length = 2000)
+    private String bookContent;
+
     public dummy() {
     }
 
-    public dummy(Long id, String name, String address) {
+    public dummy(UUID id, String name, String address, String bookContent) {
         this.id = id;
         this.name = name;
         this.address = address;
+        this.bookContent = bookContent;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(UUID id) {
         this.id = id;
     }
 
@@ -51,12 +61,11 @@ public class dummy {
         this.address = address;
     }
 
-    @Override
-    public String toString() {
-        return "dummy{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", address='" + address + '\'' +
-                '}';
+    public String getBookContent() {
+        return bookContent;
+    }
+
+    public void setBookContent(String bookContent) {
+        this.bookContent = bookContent;
     }
 }

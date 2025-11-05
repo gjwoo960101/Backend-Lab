@@ -21,7 +21,7 @@ public class dummyDataController {
     @PersistenceContext
     private EntityManager em;
     public static Faker faker;
-    public dummyDataController(study.demo.duumyRepositroy duumyRepositroy, JdbcTemplate jdbcTemplate) {
+    public dummyDataController(duumyRepositroy duumyRepositroy, JdbcTemplate jdbcTemplate) {
         this.duumyRepositroy = duumyRepositroy;
         this.jdbcTemplate = jdbcTemplate;
         faker = new Faker(new Locale("ko"));

@@ -23,39 +23,33 @@
     위와 같은 절차를 거치기때문에 대량적제용도로는 비효율적이다.
 
 
-durationMS : 데이터생성 + 배치준비 + DB전송
-rowsPerSec: 초당 처리 가능한 행 수
+### Mysql
+- rewriteBatchedStatements란?
+    - MySQL JDBC 드라이버가 Batch Insert를 최적화해주는 설정이다.
+    ``` java
+        PreparedStatement ps = conn.prepareStatement("INSERT INTO dummy (name) VALUES (?)");
+        for (int i = 0; i < 1000; i++) {
+            ps.setString(1, "test" + i);
+            ps.addBatch();
+        }
+        ps.executeBatch();
 
-{
-    "method": "JDBC batch",
-    "count": 500,
-    "batchSize": 1000,
-    "durationMs": 730.1209,
-    "rowsPerSec": 684.8180897163744
-}
+        rewriteBatchedStatements을 true로 하게되면 1000번의 insert가 아닌 SQL 병합을 사용하여
+        한번의 insert로 해결한다.
+    ```
 
-
-{
-    "method": "JPA batch (EntityManager)",
-    "count": 500,
-    "batchSize": 1000,
-    "durationMs": 669.4309,
-    "rowsPerSec": 746.90307842079
-}
-
-
-{
-    "method": "JDBC batch",
-    "count": 10000,
-    "batchSize": 1000,
-    "durationMs": 3256.338401,
-    "rowsPerSec": 3070.933904452027
-}
-
-{
-    "method": "JPA batch (EntityManager)",
-    "count": 10000,
-    "batchSize": 1000,
-    "durationMs": 2629.2451,
-    "rowsPerSec": 3803.373067044986
-}
+ - 테스트 결과
+    - 활성화
+    ```json
+    {
+        "elapsedTimeSec": 1.283,
+        "insertCount": 2000
+    }
+    ```
+    - 비 활성화
+    ```json
+    {
+        "elapsedTimeSec": 17.627,
+        "insertCount": 2000
+    }
+    ```
